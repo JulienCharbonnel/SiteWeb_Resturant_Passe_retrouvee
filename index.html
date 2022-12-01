@@ -6,7 +6,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <style>
-body {font-family: "Times New Roman", Georgia, Serif;}
+body {
+  font-family: "Times New Roman", Georgia, Serif;
+  background-color: black;
+}
 h1, h2, h3, h4, h5, h6 {
   font-family: "Playfair Display";
   letter-spacing: 5px;
@@ -17,12 +20,13 @@ h1, h2, h3, h4, h5, h6 {
 
 <!-- Navbar (sit on top) -->
 <div class="w3-top">
-  <div class="w3-bar w3-white w3-padding w3-card" style="letter-spacing:4px;">
+  <div class="w3-bar w3-black w3-padding w3-card" style="letter-spacing:4px;">
     <a href="#home" class="w3-bar-item w3-button">Au Passé Retrouvé</a>
     <!-- Right-sided navbar links. Hide them on small screens -->
     <div class="w3-right w3-hide-small">
       <a href="#about" class="w3-bar-item w3-button">Restaurant</a>
       <a href="Menu.html" class="w3-bar-item w3-button">Menu</a>
+      <a href="#horaire" class="w3-bar-item w3-button">Horaires</a>
       <a href="#contact" class="w3-bar-item w3-button">Contact</a>
     </div>
   </div>
@@ -32,7 +36,7 @@ h1, h2, h3, h4, h5, h6 {
 <header class="w3-display-container w3-content w3-wide" style="max-width:1600px;min-width:500px" id="home">
   <img class="w3-image" src="/Images/hamburger.jpg" alt="Hamburger Catering" width="1600" height="800">
   <div class="w3-display-bottomleft w3-padding-large w3-opacity">
-    <h1 class="w3-xxlarge">Le Catering</h1>
+    <h1 class="w3-xxlarge">Au Passé Retrouvé</h1>
   </div>
 </header>
 
@@ -46,13 +50,13 @@ h1, h2, h3, h4, h5, h6 {
     </div>
 
     <div class="w3-col m6 w3-padding-large">
-      <h1 class="w3-center">A propos de notre restaurant</h1><br>
-      <h5 class="w3-center">Tradition francaise depuis 1889</h5>
-      <p class="w3-large">Le restaurant au passé retrouvé a etée crée par Mr. Gilles. C'est un restaurant traditionnel avec également une cuisine francaise Traditionnelle. Avec des ingredients
-        <span class="w3-tag w3-light-grey">Francais.</span>Nous disposons de plats diverses et variés avec notre propre savoir faire maison. </p>
-      <p class="w3-large w3-text-grey w3-hide-medium"> 
+      <h1 class="w3-center"><font color="white">A propos de notre restaurant</font></h1><br>
+      <h5 class="w3-center"><font color="white">Tradition francaise depuis 1889</font></h5>
+      <p class="w3-large"><font color="white">Le restaurant au passé retrouvé a etée crée par Mr. Gilles. C'est un restaurant traditionnel avec également une cuisine francaise Traditionnelle. Avec des ingredients
+        <span class="w3-tag w3-light-grey">Francais.</span>Nous disposons de plats diverses et variés avec notre propre savoir faire maison. </font></p>
+      <p class="w3-large w3-text-grey w3-hide-medium"> <font color="white">
         Aujourd’hui, notre chef vous propose une cuisine traditionnelle raffinée, élaborée avec des produits frais, de saison dans un décor feutré, en plein cœur de Milly la Foret.<br> Une grande terrasse vous accueille en été et en hiver tout au long de la journée.<span class="w3-tag w3-light-grey">Un must : nos plateaux de charcuterie !</span> Au passé retrouvée a le plaisir de vous proposer une large sélection de fruits de mer frais, servis sur place ou à emporter.<br>
-        Dégustez-les chez nous avec un verre de vin ou une coupe de Champagne dans une ambiance décontractée et chic.</p>
+        Dégustez-les chez nous avec un verre de vin ou une coupe de Champagne dans une ambiance décontractée et chic.</font></p>
     </div>
   </div>
   
@@ -61,21 +65,21 @@ h1, h2, h3, h4, h5, h6 {
   <!-- Menu Section -->
   <div class="w3-row w3-padding-64" id="menu">
     <div class="w3-col l6 w3-padding-large">
-      <h1 class="w3-center">Quelques plats</h1><br>
-      <h4>Exemples de nos entrées</h4>
-      <p class="w3-text-grey" style="font-size: 17px;">Foie gras de canard 21€</p>
-      <p class="w3-text-grey" style="font-size: 17px;">Salade de chèvre chaud 8€</p>
-      <p class="w3-text-grey" style="font-size: 17px;">Planche de charcuterie 15€</p><br>
+      <h1 class="w3-center"><font color="white">Quelques plats</font></h1><br>
+      <h4 class="w3-xlarge"><font color="white">Exemples de nos entrées</font></h4>
+      <p class="w3-text-grey" style="font-size: 18x;"><font color="white">Foie gras de canard 21€</font></p>
+      <p class="w3-text-grey" style="font-size: 18px;"><font color="white">Salade de chèvre chaud 8€</font></p>
+      <p class="w3-text-grey" style="font-size: 18px;"><font color="white">Planche de charcuterie 15€</font></p><br>
     
-      <h4>Exemples de nos plats</h4>
-      <p class="w3-text-grey" style="font-size: 17px;">Entrecôte 250g 18€ ou 400g 28€</p>
-      <p class="w3-text-grey" style="font-size: 17px;">Salade de chèvre chaud 8€</p>
-      <p class="w3-text-grey" style="font-size: 17px;">Planche de charcuterie 15€</p><br>    
+      <h4 class="w3-xlarge"><font color="white">Exemples de nos plats</font></h4>
+      <p class="w3-text-grey" style="font-size: 18px;"><font color="white">Entrecôte 250g 18€ ou 400g 28€</font></p>
+      <p class="w3-text-grey" style="font-size: 18px;"><font color="white">Salade de chèvre chaud 8€</font></p>
+      <p class="w3-text-grey" style="font-size: 18px;"><font color="white">Planche de charcuterie 15€</font></p><br>    
 
-      <h4>Exemples de nos hamburgers</h4>
-      <p class="w3-text-grey" style="font-size: 17px;">Montagnard 18€</p>
-      <p class="w3-text-grey" style="font-size: 17px;">Crousty Poulet 17€</p>
-      <p class="w3-text-grey" style="font-size: 17px;">Vegan 17€</p><br> 
+      <h4 class="w3-xlarge"><font color="white">Exemples de nos hamburgers</font></h4>
+      <p class="w3-text-grey" style="font-size: 18px;"><font color="white">Montagnard 18€</font></p>
+      <p class="w3-text-grey" style="font-size: 18px;"><font color="white">Crousty Poulet 17€</font></p>
+      <p class="w3-text-grey" style="font-size: 18px;"><font color="white">Vegan 17€</font></p><br> 
 
       <!--Bouton pour voir le menu en entier-->
       <a href="Menu.html" class="w3-button w3-green w3-padding-large w3-large w3-margin-top">Voir le menu</a>
@@ -91,23 +95,24 @@ h1, h2, h3, h4, h5, h6 {
   <hr>
 
   <!--Horaires section-->
-
-    <h1 class="w3-center">Horaires</h1><br>
-    <h4 class="w3-center" style="font-size: 25px;">Horaires d'ouverture</h4>
-    <p class="w3-text-grey w3-center" style="font-size: 20px;"><span class="w3-tag w3-light-grey">Lundi</span> 12h - 14h / 19h - 22h</p>
-    <p class="w3-text-grey w3-center" style="font-size: 20px;"><span class="w3-tag w3-light-grey">Mardi</span> 12h - 14h / 19h - 22h</p>
-    <p class="w3-text-grey w3-center" style="font-size: 20px;"><span class="w3-tag w3-light-grey">Mercredi</span> 12h - 14h / 19h - 22h</p>
-    <p class="w3-text-grey w3-center" style="font-size: 20px;"><span class="w3-tag w3-light-grey">Jeudi</span> 12h - 14h / 19h - 22h</p>
-    <p class="w3-text-grey w3-center" style="font-size: 20px;"><span class="w3-tag w3-light-grey">Vendredi</span> 12h - 14h / 19h - 22h</p>
-    <p class="w3-text-grey w3-center" style="font-size: 20px;"><span class="w3-tag w3-light-grey">Samedi</span> 12h - 14h / 19h - 22h</p>
-    <p class="w3-text-grey w3-center" style="font-size: 20px;"><span class="w3-tag w3-light-grey">Dimanche</span> 12h - 14h / 19h - 22h</p><br>
+  <div id="horaire">
+    <h1 class="w3-center"><font color="white">Horaires</font></h1><br>
+    <h4 class="w3-center" style="font-size: 25px;"><font color="white">Horaires d'ouverture</font></h4>
+    <p class="w3-text-grey w3-center" style="font-size: 20px;"><font color="white"><span class="w3-tag w3-light-grey">Lundi</span> 12h - 14h / 19h - 22h</font></p>
+    <p class="w3-text-grey w3-center" style="font-size: 20px;"><font color="white"><span class="w3-tag w3-light-grey">Mardi</span> 12h - 14h / 19h - 22h</font></p>
+    <p class="w3-text-grey w3-center" style="font-size: 20px;"><font color="white"><span class="w3-tag w3-light-grey">Mercredi</span> 12h - 14h / 19h - 22h</font></p>
+    <p class="w3-text-grey w3-center" style="font-size: 20px;"><font color="white"><span class="w3-tag w3-light-grey">Jeudi</span> 12h - 14h / 19h - 22h</font></p>
+    <p class="w3-text-grey w3-center" style="font-size: 20px;"><font color="white"><span class="w3-tag w3-light-grey">Vendredi</span> 12h - 14h / 19h - 22h</font></p>
+    <p class="w3-text-grey w3-center" style="font-size: 20px;"><font color="white"><span class="w3-tag w3-light-grey">Samedi</span> 12h - 14h / 19h - 22h</font></p>
+    <p class="w3-text-grey w3-center" style="font-size: 20px;"><font color="white"><span class="w3-tag w3-light-grey">Dimanche</span> 12h - 14h / 19h - 22h</font></p><br>
     
     <hr>
+  </div>
 
   <!-- Contact Section -->
   <div class="w3-container w3-padding-64 w3-center" id="contact">
-    <h1>Contact</h1><br>
-    <p class="w3-xlarge">Afin de réserver chez nous, n'hésitez pas à nous apeller au <span class="w3-tag w3-light-grey">01 64 98 81 82</span></p>
+    <h1><font color="white">Contact</font></h1><br>
+    <p class="w3-xlarge"><font color="white">Afin de réserver chez nous, n'hésitez pas à nous apeller au <span class="w3-tag w3-light-grey">01 64 98 81 82</span></font></p>
     <p class="w3-text-blue-grey w3-xlarge"><b> 1 Bd du Gouverneur Félix Éboué, 91490 Milly-la-Forêt</b></p>
     <!--Texte de remerciement-->
     <p class="w3-text-blue-grey w3-xlarge"><b>Merci de votre visite ! En espérant vous voir bientot dans notre restaurant.</b></p>
@@ -117,8 +122,8 @@ h1, h2, h3, h4, h5, h6 {
 </div>
 
 <!-- Footer -->
-<footer class="w3-center w3-light-grey w3-padding-32">
-  <p class="w3-xlarge">Crée par <a href="https://github.com/SkyLineJc" title="W3.CSS" target="_blank" class="w3-hover-text-green w3-xlarge">Julien Charbonnel</a></p>
+<footer class="w3-center w3-padding-32 ">
+  <p class="w3-xlarge"><font color="white">Crée par <a href="https://github.com/SkyLineJc" title="W3.CSS" target="_blank" class="w3-hover-text-green w3-xlarge">Julien Charbonnel</a><font color="white"></font></p>
 </footer>
 
 </body>
