@@ -8,13 +8,17 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
 
 <style>
-  body {font-family: "Times New Roman", Georgia, Serif;}
+  body {font-family: "Times New Roman", Georgia, Serif; width: 100%; min-width: 560px;}
   h1, h2, h3, h4, h5, h6 {
     font-family: "Playfair Display";
   }
 </style>
 </head>
 <body>
+  
+<!--Quand les dimensions de l'écran deviennent trop petites on empeche le redisionnement-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 
 <!-- Navbar (sit on top) -->
 <div class="w3-top">
@@ -23,6 +27,7 @@
     <!-- Right-sided navbar links. Hide them on small screens -->
     <div class="w3-right w3-hide-small">
       <a href="index.html#about" class="w3-bar-item w3-button">Restaurant</a>
+      <a href="index.html#horaire" class="w3-bar-item w3-button">Horaires</a>
       <a href="index.html#contact" class="w3-bar-item w3-button">Contact</a>
     </div>
   </div>
