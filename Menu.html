@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Le menu</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
+  <title>Le menu</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
 
-<style>
-  body {font-family: "Times New Roman", Georgia, Serif; width: 100%; min-width: 560px;}
-  h1, h2, h3, h4, h5, h6 {
-    font-family: "Playfair Display";
-    font-size: 30px;
-  }
-</style>
+  <style>
+    body {font-family: "Times New Roman", Georgia, Serif; width: 100%; min-width: 560px;}
+    h1, h2, h3, h4, h5, h6 {
+      font-family: "Playfair Display";
+      font-size: 30px;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 <body>
   
@@ -138,6 +139,8 @@
   </div>
 </div>
 
+<button onclick="downloadPDF()" class="w3-button w3-black w3-padding-large w3-margin-top">Télécharger la carte de menu (PDF)</button>
+
 
 <!-- Footer -->
 <footer class="w3-center w3-black w3-padding-32">
@@ -145,21 +148,112 @@
 </footer>
 
 <script>
-// Tabbed Menu
-function openMenu(evt, menuName) {
-  var i, x, tablinks;
-  x = document.getElementsByClassName("menu");
-  for (i = 0; i < x.length; i++) {
-     x[i].style.display = "none";
+  // Tabbed Menu
+  function openMenu(evt, menuName) {
+    var i, x, tablinks;
+    x = document.getElementsByClassName("menu");
+    for (i = 0; i < x.length; i++) {
+      x[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablink");
+    for (i = 0; i < x.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
+    }
+    document.getElementById(menuName).style.display = "block";
+    evt.currentTarget.firstElementChild.className += " w3-red";
   }
-  tablinks = document.getElementsByClassName("tablink");
-  for (i = 0; i < x.length; i++) {
-     tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
-  }
-  document.getElementById(menuName).style.display = "block";
-  evt.currentTarget.firstElementChild.className += " w3-red";
+  document.getElementById("myLink").click();
+
+
+
+  function downloadPDF() {
+    // Crée un nouvel objet jsPDF
+    const doc = new window.jspdf.jsPDF();
+
+    // Définit la police et la taille pour le titre
+    doc.setFont("times");
+    doc.setFontSize(30);
+
+    // Ajoute le titre du menu avec une bordure
+    doc.setDrawColor(0); // Bordure noire
+    doc.setFillColor(255, 255, 255); // Fond blanc
+    doc.rect(10, 10, 190, 20, "F"); // Rectangle pour le titre
+    doc.setTextColor(0); // Texte noir
+    doc.text("LE MENU", 105, 23, { align: "center" }); // Titre centré
+
+    // Liste des sections du menu avec leur titre et leur ID correspondant
+    const menuSections = [
+        { title: "Entrées", id: "Entree" },
+        { title: "Plats", id: "Plats" },
+        { title: "Garnitures", id: "Garnitures" },
+        { title: "Burgers", id: "Burgers" },
+        { title: "Desserts", id: "Desserts" },
+        { title: "Formules", id: "Formules" }
+    ];
+
+    // Position verticale initiale
+    let yOffset = 40;
+
+    // Fonction pour vérifier et gérer les sauts de page si nécessaire
+    const checkPageBreak = (yOffsetIncrement) => {
+        const totalPages = doc.internal.getNumberOfPages();
+        const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
+
+        // Ajoute l'incrément de décalage à la position verticale actuelle
+        yOffset += yOffsetIncrement;
+
+        // Si la position verticale dépasse la marge inférieure de la page, ajoute une nouvelle page
+        if (yOffset > 280) {
+            doc.addPage();
+            yOffset = 10; // Réinitialise la position verticale pour la nouvelle page
+        }
+    };
+
+    // Boucle à travers chaque section du menu
+    menuSections.forEach(section => {
+        const sectionElement = document.getElementById(section.id);
+        if (sectionElement) {
+            // Ajoute le titre de la section avec une bordure
+            doc.setDrawColor(0); // Bordure noire
+            doc.setFillColor(200, 200, 200); // Fond gris clair
+            doc.rect(10, yOffset, 190, 10, "F"); // Rectangle pour le titre de la section
+            doc.setTextColor(0); // Texte noir
+            doc.setFontSize(18);
+            doc.text(section.title, 15, yOffset + 7); // Titre de la section
+
+            // Récupère tous les éléments de la section
+            const items = sectionElement.querySelectorAll("h1");
+            items.forEach(item => {
+                // Si c'est le premier élément de la section, ne pas ajouter le prix
+                const itemName = item.querySelector("b").textContent;
+                const itemPrice = item.querySelector(".w3-tag").textContent;
+                checkPageBreak(7.5); // Vérifie le saut de page en fonction de la hauteur de l'élément
+                doc.setFontSize(14);
+                doc.text(itemName, 15, yOffset + 20); // Nom de l'élément
+                // Si le prix existe, l'ajouter à côté de l'élément
+                if (itemPrice) {
+                    doc.text(itemPrice, 160, yOffset + 20); // Prix
+                }
+                yOffset += 5; // Espacement réduit entre les éléments
+            });
+            yOffset += 10; // Ajoute un espace supplémentaire entre les sections
+        }
+    });
+
+    // Enregistre le document PDF
+    doc.save("menu.pdf");
 }
-document.getElementById("myLink").click();
+
+
+
+
+
+
+
+
+
+
+
 </script>
 
 </body>
