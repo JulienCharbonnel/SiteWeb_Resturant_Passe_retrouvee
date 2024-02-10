@@ -182,51 +182,31 @@ function downloadPDF() {
     menuSections.forEach(section => {
         const sectionElement = document.getElementById(section.id);
         if (sectionElement) {
-            // Sélectionne tous les éléments de la section
-            const items = sectionElement.querySelectorAll(".menu-item");
-
-            // Vérifie si la section dépasse la limite de la page
-            let sectionHeight = 40 + items.length * 10; // Hauteur totale de la section avec les éléments
-            if (yOffset + sectionHeight > 280) {
-                doc.addPage(); // Ajoute une nouvelle page
-                yOffset = 10; // Réinitialise la position verticale
-            }
-
             // Ajoute le titre de la section avec une bordure
             doc.setDrawColor(0); // Bordure noire
-            doc.setFillColor(230, 230, 230); // Fond gris clair
-            const titleYOffset = yOffset + 10; // Position verticale pour le titre
-            doc.rect(10, titleYOffset, 190, 10, "F"); // Rectangle pour le titre de la section
-            doc.setTextColor(30, 30, 30); // Texte noir
+            doc.setFillColor(200, 200, 200); // Fond gris clair
+            doc.rect(10, yOffset, 190, 10, "F"); // Rectangle pour le titre de la section
+            doc.setTextColor(0); // Texte noir
             doc.setFont("helvetica", "bold");
             doc.setFontSize(20); // Taille de la police pour les titres de section
-            const textWidth = doc.getStringUnitWidth(section.title) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-            const startX = (200 - textWidth) / 2 + 10; // Centre le texte horizontalement
-            doc.text(section.title, startX, titleYOffset + 7); // Titre de la section
+            doc.text(section.title, 15, yOffset + 10); // Titre de la section
 
-            // Couleurs pour les éléments de menu
-            const itemTextColor = [30, 30, 30]; // Couleur du texte des éléments de menu
-            const itemBackgroundColor = [255, 255, 255]; // Couleur de fond des éléments de menu
-            const itemBorderColor = [200, 200, 200]; // Couleur de bordure des éléments de menu
-
-            items.forEach((item, index) => {
+            // Récupère tous les éléments de la section
+            const items = sectionElement.querySelectorAll(".menu-item");
+            items.forEach(item => {
                 // Récupère le nom et le prix de l'élément
                 const itemName = item.querySelector("b").textContent;
                 const itemPrice = item.querySelector(".w3-tag").textContent;
                 checkPageBreak(10); // Vérifie le saut de page en fonction de la hauteur de l'élément
-                doc.setDrawColor(...itemBorderColor); // Couleur de la bordure de l'élément
-                doc.setFillColor(...itemBackgroundColor); // Couleur de fond de l'élément
-                doc.rect(10, yOffset + 20, 190, 10, "F"); // Rectangle pour l'élément de menu
-                doc.setTextColor(...itemTextColor); // Couleur du texte de l'élément de menu
                 doc.setFont("helvetica", "normal");
                 doc.setFontSize(16); // Taille de la police pour les éléments de menu
-                doc.text(itemName, 15, yOffset + 30); // Nom de l'élément
+                doc.text(itemName, 15, yOffset + 20); // Nom de l'élément
                 // Si le prix existe, l'ajouter à côté de l'élément
                 if (itemPrice) {
                     doc.setFont("helvetica", "normal");
-                    doc.text(itemPrice, 160, yOffset + 30); // Prix
+                    doc.text(itemPrice, 160, yOffset + 20); // Prix
                 }
-                yOffset += 20; // Espacement entre les éléments de menu
+                yOffset += 10; // Espacement réduit entre les éléments
             });
             yOffset += 10; // Ajoute un espace supplémentaire entre les sections
         }
@@ -235,7 +215,6 @@ function downloadPDF() {
     // Enregistre le document PDF
     doc.save("menu.pdf");
 }
-
 
 </script>
 

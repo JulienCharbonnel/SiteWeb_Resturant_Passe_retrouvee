@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interface d'administration</title>
+</head>
+<body>
+    <h1>Interface d'administration</h1>
+    
+    <!-- Formulaire de connexion -->
+    <form id="loginForm">
+        <label for="password">Mot de passe :</label>
+        <input type="password" id="password" name="password">
+        <button type="submit">Connexion</button>
+    </form>
+
+    <!-- Formulaire de modification des prix (caché par défaut) -->
+    <div id="priceUpdateForm" style="display: none;">
+        <h2>Modifier les prix</h2>
+        <form id="updateForm">
+            <!-- Tableau pour afficher les produits existants -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom du produit</th>
+                        <th>Prix</th>
+                        <th>Section</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productsList">
+                    <!-- Les produits seront ajoutés ici dynamiquement -->
+                </tbody>
+            </table>
+            <br>
+            <!-- Ajouter un nouveau produit -->
+            <h3>Ajouter un produit</h3>
+            <label for="productName">Nom du produit :</label>
+            <input type="text" id="productName" name="productName" required>
+            <label for="productPrice">Prix :</label>
+            <input type="text" id="productPrice" name="productPrice" required>
+            <label for="productSection">Section :</label>
+            <select id="productSection" name="productSection">
+                <option value="Entrées">Entrées</option>
+                <option value="Garnitures">Garnitures</option>
+                <option value="Plats">Plats</option>
+                <option value="Burgers">Burgers</option>
+                <option value="Desserts">Desserts</option>
+                <option value="Formules">Formules</option>
+            </select>
+            <br><br>
+            <button type="button" onclick="addProduct()">Ajouter le produit</button>
+            <button type="button" onclick="saveChanges()">Enregistrer</button>
+        </form>
+    </div>
+
+    <script>
+        // Fonction pour charger les produits à partir du stockage local
+        function loadProductsFromLocalStorage() {
+            var prixMenuString = localStorage.getItem("prixMenu");
+            if (prixMenuString) {
+                var prixMenu = JSON.parse(prixMenuString);
+                Object.keys(prixMenu).forEach(productName => {
+                    var product = prixMenu[productName];
+                    var newRow = document.createElement("tr");
+                    newRow.innerHTML = `
+                        <td>${productName}</td>
+                        <td>${product.price}</td>
+                        <td>${product.section}</td>
+                        <td><button type="button" onclick="deleteRow(this)">Supprimer</button></td>
+                    `;
+                    document.getElementById("productsList").appendChild(newRow);
+                });
+            }
+        }
+
+        // Appeler la fonction pour charger les produits lors du chargement de la page
+        window.addEventListener("load", function() {
+            loadProductsFromLocalStorage();
+        });
+
+        // Vérifiez le mot de passe lors de la soumission du formulaire de connexion
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            var password = document.getElementById("password").value;
+            // Vérifiez si le mot de passe est correct (vous pouvez le remplacer par votre propre vérification)
+            if (password === "123") {
+                // Affichez le formulaire de modification des prix
+                document.getElementById("priceUpdateForm").style.display = "block";
+            } else {
+                alert("Mot de passe incorrect !");
+            }
+        });
+
+        // Fonction pour ajouter un nouveau produit au tableau
+        function addProduct() {
+            var productName = document.getElementById("productName").value;
+            var productPrice = document.getElementById("productPrice").value;
+            var productSection = document.getElementById("productSection").value;
+
+            // Vérifiez si le nom et le prix du produit sont fournis
+            if (productName && productPrice && productSection) {
+                // Créer une nouvelle ligne dans le tableau
+                var newRow = document.createElement("tr");
+                newRow.innerHTML = `
+                    <td>${productName}</td>
+                    <td>${productPrice}</td>
+                    <td>${productSection}</td>
+                    <td><button type="button" onclick="deleteRow(this)">Supprimer</button></td>
+                `;
+                document.getElementById("productsList").appendChild(newRow);
+
+                // Réinitialiser les champs du formulaire après l'ajout du produit
+                document.getElementById("productName").value = "";
+                document.getElementById("productPrice").value = "";
+                
+                // Log de l'ajout du produit
+                console.log("Produit ajouté :", productName, productPrice, productSection);
+            } else {
+                alert("Veuillez remplir tous les champs !");
+            }
+        }
+
+        // Fonction pour supprimer une ligne du tableau
+        function deleteRow(btn) {
+            var row = btn.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+
+        // Fonction pour enregistrer les modifications des prix dans le stockage local
+        function saveChanges() {
+            var rows = document.getElementById("productsList").querySelectorAll("tr");
+            if (rows.length === 0) {
+                alert("Aucun produit à enregistrer !");
+                return;
+            }
+
+            var prixMenu = {};
+            rows.forEach(row => {
+                var columns = row.querySelectorAll("td");
+                if (columns.length === 4) { // Vérifiez si c'est une ligne de produit valide
+                    var productName = columns[0].textContent;
+                    var productPrice = columns[1].textContent;
+                    var productSection = columns[2].textContent;
+                    prixMenu[productName] = { price: productPrice, section: productSection };
+                }
+            });
+            // Enregistrer prixMenu dans le stockage local
+            localStorage.setItem("prixMenu", JSON.stringify(prixMenu));
+            console.log("Affichage des nouveaux prix dans le stockage local : ", prixMenu);
+            alert("Modifications enregistrées !");
+            
+            // Afficher les produits dans la console pour le débogage
+            console.log("Produits dans le stockage local : ", localStorage.getItem("prixMenu"));
+        }
+
+    </script>
+</body>
+</html>
