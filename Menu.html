@@ -12,6 +12,17 @@
     h1 {font-family: 'Great Vibes', cursive;}
     .menu-item {font-size: 38px; margin-bottom: 10px;}
     .w3-bar-item {font-family: 'Amatic SC', cursive; font-size: 28px;}
+    .button-container {
+    background-color: black; /* Définit la couleur de fond du conteneur à noir */
+    overflow: hidden; /* Pour assurer que le conteneur prend toute la largeur */
+    }
+    .centered-button {
+      display: block;
+      margin: 0 auto;
+      border: none;
+      padding: 0;
+      font-size: 35px; /* Augmente la taille du texte à 20 pixels */
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
@@ -83,8 +94,9 @@
 </div>
 
 
-<button onclick="downloadPDF()" class="w3-button w3-black w3-padding-large w3-margin-top">Télécharger la carte de menu (PDF)</button>
-
+<div class="button-container">
+  <button onclick="downloadPDF()" class="w3-button w3-black w3-padding-large centered-button">Télécharger la carte de menu (PDF)</button>
+</div>
 
 <!-- Footer -->
 <footer class="w3-center w3-black w3-padding-32">
@@ -133,22 +145,9 @@ window.onload = function() {
     console.log("Produits du menu chargés avec succès.");
 };
 
-
-
-function downloadPDF() {
+const downloadPDF = () => {
     // Crée un nouvel objet jsPDF
     const doc = new window.jspdf.jsPDF();
-
-    // Définit la police et la taille pour le titre
-    doc.setFont("times", "bold");
-    doc.setFontSize(40);
-
-    // Ajoute le titre du menu avec une bordure
-    doc.setDrawColor(0); // Bordure noire
-    doc.setFillColor(255, 255, 255); // Fond blanc
-    doc.rect(10, 10, 190, 20, "F"); // Rectangle pour le titre
-    doc.setTextColor(0); // Texte noir
-    doc.text("LE MENU", 105, 23, { align: "center" }); // Titre centré
 
     // Liste des sections du menu avec leur titre et leur ID correspondant
     const menuSections = [
@@ -161,72 +160,80 @@ function downloadPDF() {
     ];
 
     // Position verticale initiale
-    let yOffset = 40;
+    let yOffset = 40; // Pour laisser de l'espace pour le titre
 
-    // Fonction pour vérifier et gérer les sauts de page si nécessaire
-    const checkPageBreak = (yOffsetIncrement) => {
-        const totalPages = doc.internal.getNumberOfPages();
-        const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
-
-        // Ajoute l'incrément de décalage à la position verticale actuelle
-        yOffset += yOffsetIncrement;
-
-        // Si la position verticale dépasse la marge inférieure de la page, ajoute une nouvelle page
-        if (yOffset > 280) {
-            doc.addPage();
-            yOffset = 10; // Réinitialise la position verticale pour la nouvelle page
-        }
+    // Fonction pour ajouter la bordure sur chaque page
+    const addBorder = () => {
+        doc.setDrawColor(0); // Couleur de la bordure
+        doc.setLineWidth(2); // Épaisseur de la bordure
+        doc.rect(5, 5, 200, 290); // Rectangle pour la bordure
     };
 
+    // Ajoute le titre du menu sur la première page
+    const addTitle = () => {
+        doc.setFont("times", "bold");
+        doc.setFontSize(40);
+        doc.text("LE MENU", 105, 23, { align: "center" }); // Titre centré
+    };
+
+    // Ajoute la bordure et le titre sur la première page
+    addBorder();
+    addTitle();
+
     // Boucle à travers chaque section du menu
-    menuSections.forEach(section => {
+    menuSections.forEach((section, index) => {
         const sectionElement = document.getElementById(section.id);
         if (sectionElement) {
-            // Sélectionne tous les éléments de la section
-            const items = sectionElement.querySelectorAll(".menu-item");
-
-            // Vérifie si la section dépasse la limite de la page
-            let sectionHeight = 40 + items.length * 10; // Hauteur totale de la section avec les éléments
-            if (yOffset + sectionHeight > 280) {
-                doc.addPage(); // Ajoute une nouvelle page
-                yOffset = 10; // Réinitialise la position verticale
+            // Si ce n'est pas la première section, ajoute une nouvelle page et la bordure
+            if (index !== 0) {
+                doc.addPage();
+                addBorder(); // Ajouter la bordure à chaque nouvelle page
+                yOffset = 10; // Réinitialise la position verticale pour la nouvelle page
             }
 
-            // Ajoute le titre de la section avec une bordure
-            doc.setDrawColor(0); // Bordure noire
-            doc.setFillColor(230, 230, 230); // Fond gris clair
-            const titleYOffset = yOffset + 10; // Position verticale pour le titre
-            doc.rect(10, titleYOffset, 190, 10, "F"); // Rectangle pour le titre de la section
+            yOffset += 20;
+
+            // Ajoute le titre de la section
             doc.setTextColor(30, 30, 30); // Texte noir
             doc.setFont("helvetica", "bold");
-            doc.setFontSize(20); // Taille de la police pour les titres de section
+            doc.setFontSize(25); // Taille de la police pour les titres de section
             const textWidth = doc.getStringUnitWidth(section.title) * doc.internal.getFontSize() / doc.internal.scaleFactor;
             const startX = (200 - textWidth) / 2 + 10; // Centre le texte horizontalement
-            doc.text(section.title, startX, titleYOffset + 7); // Titre de la section
+            doc.text(section.title, startX, yOffset + 7); // Titre de la section
+
+            // Espacement après le titre de la section
+            yOffset += 20;
 
             // Couleurs pour les éléments de menu
             const itemTextColor = [30, 30, 30]; // Couleur du texte des éléments de menu
             const itemBackgroundColor = [255, 255, 255]; // Couleur de fond des éléments de menu
             const itemBorderColor = [200, 200, 200]; // Couleur de bordure des éléments de menu
 
+            const items = sectionElement.querySelectorAll(".menu-item");
             items.forEach((item, index) => {
                 // Récupère le nom et le prix de l'élément
                 const itemName = item.querySelector("b").textContent;
                 const itemPrice = item.querySelector(".w3-tag").textContent;
-                checkPageBreak(10); // Vérifie le saut de page en fonction de la hauteur de l'élément
-                doc.setDrawColor(...itemBorderColor); // Couleur de la bordure de l'élément
-                doc.setFillColor(...itemBackgroundColor); // Couleur de fond de l'élément
-                doc.rect(10, yOffset + 20, 190, 10, "F"); // Rectangle pour l'élément de menu
+
+                // Ajoute le texte de l'élément de menu
                 doc.setTextColor(...itemTextColor); // Couleur du texte de l'élément de menu
                 doc.setFont("helvetica", "normal");
-                doc.setFontSize(16); // Taille de la police pour les éléments de menu
-                doc.text(itemName, 15, yOffset + 30); // Nom de l'élément
-                // Si le prix existe, l'ajouter à côté de l'élément
+                doc.setFontSize(20); // Taille de la police pour les éléments de menu
+                doc.text(itemName, 15, yOffset + 20); // Nom de l'élément
+
+                // Si le prix existe, l'ajoute à côté de l'élément
                 if (itemPrice) {
                     doc.setFont("helvetica", "normal");
-                    doc.text(itemPrice, 160, yOffset + 30); // Prix
+                    doc.text(itemPrice, 160, yOffset + 20); // Prix
                 }
-                yOffset += 20; // Espacement entre les éléments de menu
+
+                // Dessine une ligne en dessous de l'élément de menu sauf pour le dernier élément
+                if (index < items.length - 1) {
+                    doc.setLineWidth(0.1);
+                    doc.line(10, yOffset + 30, 200, yOffset + 30);
+                }
+
+                yOffset += 35; // Espacement entre les éléments de menu
             });
             yOffset += 10; // Ajoute un espace supplémentaire entre les sections
         }
@@ -234,7 +241,11 @@ function downloadPDF() {
 
     // Enregistre le document PDF
     doc.save("menu.pdf");
-}
+};
+
+
+
+
 
 
 </script>
