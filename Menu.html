@@ -121,7 +121,6 @@ function openMenu(evt, menuName) {
 }
 document.querySelector('.tablink').click();
 
-<!-- Charger les produits du menu lors du chargement de la page -->
 window.onload = function() {
     console.log("Chargement des produits du menu...");
     loadMenuProductsFromJSON();
@@ -135,12 +134,13 @@ function loadMenuProductsFromJSON() {
         .then(data => { // Traiter les données JSON
             console.log("Données du fichier JSON:", data);
             Object.keys(data).forEach(productName => {
-                var product = data[productName];
-                var sectionId = product.section.replace(/\s+/g, '');
-                var sectionElement = document.getElementById(sectionId);
+                const product = data[productName];
+                const sectionId = product.section.replace(/\s+/g, '');
+                const sectionElement = document.getElementById(sectionId);
                 if (sectionElement) {
-                    var menuItem = document.createElement("div");
-                    menuItem.innerHTML = `<div class="menu-item"><b>${productName}</b><span class="w3-right w3-tag w3-dark-grey w3-round">${product.price}</span></div>`;
+                    const menuItem = document.createElement("div");
+                    menuItem.classList.add("menu-item");
+                    menuItem.innerHTML = `<b>${productName}</b><span class="w3-right w3-tag w3-dark-grey w3-round">${product.price}</span>`;
                     sectionElement.appendChild(menuItem);
                 }
             });
@@ -149,6 +149,8 @@ function loadMenuProductsFromJSON() {
             console.error('Une erreur s\'est produite lors du chargement du fichier JSON :', error);
         });
 }
+
+
 
 
 const downloadPDF = () => {

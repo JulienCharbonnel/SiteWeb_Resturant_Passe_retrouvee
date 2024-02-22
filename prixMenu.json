@@ -10,5 +10,9 @@
     "foie gras": {
         "price": "21€",
         "section": "Entrées"
+    },
+    "Raspoutine": {
+        "price": "100€",
+        "section": "Entrées"
     }
 }
