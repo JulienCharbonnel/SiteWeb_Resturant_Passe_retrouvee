@@ -121,29 +121,35 @@ function openMenu(evt, menuName) {
 }
 document.querySelector('.tablink').click();
 
-// Charger dynamiquement les produits dans le menu depuis le stockage local
-function loadMenuProducts() {
-    var products = JSON.parse(localStorage.getItem("prixMenu")) || {};
-    console.log("Chargement des produits du menu :", products);
-  
-    Object.keys(products).forEach(productName => {
-        var product = products[productName];
-        var sectionId = product.section.replace(/\s+/g, '');
-        var sectionElement = document.getElementById(sectionId);
-        if (sectionElement) {
-            var menuItem = document.createElement("div");
-            menuItem.innerHTML = `<div class="menu-item"><b>${productName}</b><span class="w3-right w3-tag w3-dark-grey w3-round">${product.price}</span></div>`;
-            sectionElement.appendChild(menuItem);
-        }
-    });
-}
-
-// Charger les produits du menu lors du chargement de la page
+<!-- Charger les produits du menu lors du chargement de la page -->
 window.onload = function() {
     console.log("Chargement des produits du menu...");
-    loadMenuProducts();
+    loadMenuProductsFromJSON();
     console.log("Produits du menu chargés avec succès.");
 };
+
+// Charger dynamiquement les produits du menu depuis le fichier JSON
+function loadMenuProductsFromJSON() {
+    fetch('prixMenu.json') // Effectuer une requête pour récupérer le fichier JSON
+        .then(response => response.json()) // Convertir la réponse en JSON
+        .then(data => { // Traiter les données JSON
+            console.log("Données du fichier JSON:", data);
+            Object.keys(data).forEach(productName => {
+                var product = data[productName];
+                var sectionId = product.section.replace(/\s+/g, '');
+                var sectionElement = document.getElementById(sectionId);
+                if (sectionElement) {
+                    var menuItem = document.createElement("div");
+                    menuItem.innerHTML = `<div class="menu-item"><b>${productName}</b><span class="w3-right w3-tag w3-dark-grey w3-round">${product.price}</span></div>`;
+                    sectionElement.appendChild(menuItem);
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Une erreur s\'est produite lors du chargement du fichier JSON :', error);
+        });
+}
+
 
 const downloadPDF = () => {
     // Crée un nouvel objet jsPDF

@@ -1,0 +1,14 @@
+{
+    "boeufs": {
+        "price": "40€",
+        "section": "Plats"
+    },
+    "pates": {
+        "price": "10€",
+        "section": "Plats"
+    },
+    "foie gras": {
+        "price": "21€",
+        "section": "Entrées"
+    }
+}

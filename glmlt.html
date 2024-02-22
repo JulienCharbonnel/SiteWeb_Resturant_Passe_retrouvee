@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interface d'administration</title>
+</head>
+<body>
+    <h1>Interface d'administration</h1>
+    
+    <!-- Formulaire de connexion -->
+    <form id="loginForm">
+        <label for="password">Mot de passe :</label>
+        <input type="password" id="password" name="password">
+        <button type="submit">Connexion</button>
+    </form>
+
+    <!-- Formulaire de modification des prix (caché par défaut) -->
+    <div id="priceUpdateForm" style="display: none;">
+        <h2>Modifier les prix</h2>
+        <form id="updateForm" method="post">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom du produit</th>
+                        <th>Prix</th>
+                        <th>Section</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productsList">
+                    <!-- Les produits seront ajoutés ici dynamiquement -->
+                </tbody>
+            </table>
+            <br>
+            <h3>Ajouter un produit</h3>
+            <label for="productName">Nom du produit :</label>
+            <input type="text" id="productName" name="productName" required>
+            <label for="productPrice">Prix :</label>
+            <input type="text" id="productPrice" name="productPrice" required>
+            <label for="productSection">Section :</label>
+            <select id="productSection" name="productSection">
+                <option value="Entrées">Entrées</option>
+                <option value="Garnitures">Garnitures</option>
+                <option value="Plats">Plats</option>
+                <option value="Burgers">Burgers</option>
+                <option value="Desserts">Desserts</option>
+                <option value="Formules">Formules</option>
+            </select>
+            <br><br>
+            <button type="button" onclick="addProduct()">Ajouter le produit</button>
+            <button type="button" onclick="saveChanges()">Enregistrer</button>
+        </form>
+    </div>
+
+
+
+    <script>
+        var prixMenu = {}; // Objet global pour stocker les produits
+
+        // Fonction pour charger les produits depuis le fichier JSON et les afficher
+        function loadProductsFromJSON() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "getProduits.php", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.error) {
+                            alert(response.error);
+                        } else {
+                            prixMenu = response;
+                            displayProducts(); // Afficher les produits après chargement
+                        }
+                    } else {
+                        alert("Une erreur s'est produite lors du chargement des données du menu. Veuillez réessayer.");
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        // Fonction pour afficher les produits dans le tableau
+        function displayProducts() {
+            var productsList = document.getElementById("productsList");
+            productsList.innerHTML = "";
+            Object.keys(prixMenu).forEach(productName => {
+                var product = prixMenu[productName];
+                var newRow = document.createElement("tr");
+                newRow.innerHTML = `
+                    <td>${productName}</td>
+                    <td>${product.price}</td>
+                    <td>${product.section}</td>
+                    <td><button type="button" onclick="deleteProduct('${productName}')">Supprimer</button></td>
+                `;
+                productsList.appendChild(newRow);
+            });
+        }
+
+        // Fonction pour ajouter un nouveau produit
+        function addProduct() {
+            var productName = document.getElementById("productName").value;
+            var productPrice = document.getElementById("productPrice").value;
+            var productSection = document.getElementById("productSection").value;
+            prixMenu[productName] = { price: productPrice, section: productSection };
+            displayProducts();
+        }
+
+        // Fonction pour supprimer un produit
+        function deleteProduct(productName) {
+            delete prixMenu[productName];
+            displayProducts();
+        }
+
+        // Fonction pour sauvegarder les modifications dans le fichier JSON
+        function saveChanges() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "saveProduits.php", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        alert("Modifications enregistrées avec succès !");
+                    } else {
+                        alert("Une erreur s'est produite lors de l'enregistrement des modifications. Veuillez réessayer.");
+                    }
+                }
+            };
+            xhr.send(JSON.stringify(prixMenu));
+        }
+
+        window.addEventListener("load", function() {
+            loadProductsFromJSON();
+        });
+
+        // Intercepter l'événement de soumission du formulaire
+        document.getElementById("updateForm").addEventListener("submit", function(event) {
+            // Empêcher le comportement par défaut du formulaire (rechargement de la page)
+            event.preventDefault();
+            
+            // Appeler la fonction pour enregistrer les modifications
+            saveChanges();
+        });
+
+        
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            var password = document.getElementById("password").value;
+
+            // Hacher le mot de passe avec l'algorithme SHA-256
+            var hashedPassword = sha256(password);
+
+            // Effectuer une requête HTTP pour vérifier le mot de passe haché
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "checkPassword.php", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.authenticated) {
+                            // Afficher le formulaire de modification des prix
+                            document.getElementById("priceUpdateForm").style.display = "block";
+                        } else {
+                            // Mot de passe incorrect
+                            alert("Mot de passe incorrect !");
+                        }
+                    } else {
+                        // Une erreur s'est produite lors de la requête
+                        alert("Une erreur s'est produite. Veuillez réessayer plus tard.");
+                    }
+                }
+            };
+
+            // Envoyer la requête avec le mot de passe haché
+            xhr.send(JSON.stringify({ hashedPassword: hashedPassword }));
+        });
+
+
+        function sha256(ascii) {
+            function rightRotate(value, amount) {
+                return (value >>> amount) | (value << (32 - amount));
+            }
+
+            var mathPow = Math.pow;
+            var maxWord = mathPow(2, 32);
+            var lengthProperty = 'length';
+            var i, j; // Used as a counter across the whole file
+            var result = '';
+
+            var words = [];
+            var asciiBitLength = ascii[lengthProperty] * 8;
+
+            var hash = sha256.h = sha256.h || [];
+            // Round constants: first 32 bits of the fractional parts of the cube roots of the first 64 primes
+            var k = sha256.k = sha256.k || [];
+            var primeCounter = k[lengthProperty];
+            
+            var isComposite = {};
+            for (var candidate = 2; primeCounter < 64; candidate++) {
+                if (!isComposite[candidate]) {
+                    for (i = 0; i < 313; i += candidate) {
+                        isComposite[i] = candidate;
+                    }
+                    hash[primeCounter] = (mathPow(candidate, .5) * maxWord) | 0;
+                    k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+                }
+            }
+            
+            ascii += '\x80'; // Append 'Ƈ' bit (plus zero padding)
+            while (ascii[lengthProperty] % 64 - 56) ascii += '\x00'; // More zero padding
+            for (i = 0; i < ascii[lengthProperty]; i++) {
+                j = ascii.charCodeAt(i);
+                if (j >> 8) return; // ASCII check: only accept characters in range 0-255
+                words[i >> 2] |= j << ((3 - i) % 4) * 8;
+            }
+            words[words[lengthProperty]] = ((asciiBitLength / maxWord) | 0);
+            words[words[lengthProperty]] = (asciiBitLength);
+
+            // Process each chunk
+            for (j = 0; j < words[lengthProperty];) {
+                var w = words.slice(j, j += 16); // The message is expanded into 64 words as part of the iteration
+                var oldHash = hash;
+                hash = hash.slice(0, 8);
+
+                for (i = 0; i < 64; i++) {
+                    var i2 = i + j;
+                    var w15 = w[i - 15], w2 = w[i - 2];
+
+                    var a = hash[0], e = hash[4];
+                    var temp1 = hash[7]
+                        + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) // S1
+                        + ((e & hash[5]) ^ ((~e) & hash[6])) // ch
+                        + k[i]
+                        + (w[i] = (i < 16) ? w[i] : (
+                                w[i - 16]
+                                + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) // s0
+                                + w[i - 7]
+                                + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10)) // s1
+                            ) | 0
+                        );
+                    var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) // S0
+                        + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2])); // maj
+                    
+                    hash = [(temp1 + temp2) | 0].concat(hash);
+                    hash[4] = (hash[4] + temp1) | 0;
+                }
+
+                for (i = 0; i < 8; i++) {
+                    hash[i] = (hash[i] + oldHash[i]) | 0;
+                }
+            }
+
+            for (i = 0; i < 8; i++) {
+                for (j = 3; j + 1; j--) {
+                    var b = (hash[i] >> (j * 8)) & 255;
+                    result += ((b < 16) ? 0 : '') + b.toString(16);
+                }
+            }
+            return result;
+        }
+
+    </script>
+</body>
+</html>
